@@ -32,3 +32,9 @@ resource "aws_iam_policy" "s3_policy" {
     ]
   })
 }
+
+# attach S3 policy to IAM role
+resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
+  role       = aws_iam_role.s3-role.name
+  policy_arn = aws_iam_policy.s3_policy.arn
+}
