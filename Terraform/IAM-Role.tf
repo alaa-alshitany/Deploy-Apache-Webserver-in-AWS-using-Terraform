@@ -57,3 +57,9 @@ resource "aws_iam_policy" "session_manager_policy" {
     ]
   })
 }
+
+# attach session manager policy to IAM role
+resource "aws_iam_role_policy_attachment" "session_manager_policy_attachment" {
+  role       = aws_iam_role.s3_and_session_manager_role.name
+  policy_arn = aws_iam_policy.session_manager_policy.arn
+}
