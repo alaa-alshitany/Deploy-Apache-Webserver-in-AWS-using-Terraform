@@ -7,3 +7,8 @@ variable "bucket_names" {
   type = list(string)
   default = ["statefile-bk", "web-conf-bk"]
 }
+
+variable "dynamo_tb_name" {
+  type = string
+  default = "lock_tb"
+}
