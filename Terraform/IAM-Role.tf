@@ -13,3 +13,22 @@ resource "aws_iam_role" "s3-role" {
     ]
   })
 }
+
+#policy for s3 to allow put & get objects 
+resource "aws_iam_policy" "s3_policy" {
+  name        = "s3-access-policy"
+  description = "Policy to allow PUT/GET access to the S3 bucket"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject"
+        ]
+        Resource = "${aws_s3_bucket.bk_web.arn}/*"
+      }
+    ]
+  })
+}
