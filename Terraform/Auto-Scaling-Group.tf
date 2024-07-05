@@ -7,4 +7,5 @@ resource "aws_autoscaling_group" "web-scaling" {
   launch_template {
     id = aws_launch_template.launch_temp.id
   }
+  target_group_arns = [aws_lb_target_group.target-group.arn]
 }
