@@ -222,3 +222,13 @@ resource "aws_autoscaling_policy" "scaling-out" {
 }
 ```
 ---
+
+### Deploy Terraform IaC to create the resources
+```
+terraform init
+terraform plan
+terraform apply
+```
+---
+
+![Screenshot from 2024-07-07 21-25-50](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/assets/71197108/6da9476d-9603-4856-a7a5-38911a886713)
