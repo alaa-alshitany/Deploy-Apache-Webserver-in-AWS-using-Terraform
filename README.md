@@ -82,12 +82,143 @@ resource "aws_iam_role" "Terraform_Role" {
 }
 ```
 4- Golden AMI
-First create EC2 on AWS and get the instance ID.
+-First create EC2 on AWS and get the instance ID.
 
 ```
 resource "aws_ami_from_instance" "golden_ami" {
   name = "YOUR AMI NAME"
   source_instance_id = "YOUR INSATNCE ID"
+}
+```
+---
+
+## 🚀 Deployment
+1- Create  [IAM Role](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/IAM-Role.tf) granting PUT/GET  access to S3 Bucket and Session Manager access.
+
+---
+
+2- Create [Launch Configuration](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/launch-temp.tf) with userdata script to pull the use-data.sh file from S3 and attach IAM role and [user-data.sh will configure the webserver].
+
+---
+
+3- Create Auto Scaling Group with Min:1 Max: 1 Des: 1  in private subnet.
+
+```
+resource "aws_autoscaling_group" "web-scaling" {
+  name                      = "YOUR ASG NAME"
+  max_size                  = 1
+  min_size                  = 1
+  desired_capacity          = 1
+  vpc_zone_identifier = "YOUR AZS ID"
+
+  launch_template {
+    id = "YOUR LAUNCH TEMP ID"
+  }
+  target_group_arns = ["YOUR TARGET GROUP ARN"]
+}
+```
+---
+
+4- Create Target Group with health checks to and attach with Auto Scaling Group
+
+```
+resource "aws_lb_target_group" "target-group" {
+  name     = "YOUR TARGET GROUP NAME"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "YOUR VPC ID"
+  health_check {
+    path = "/"
+    interval = 10
+    timeout = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+}
+```
+---
+
+5- Create Application Load balancer in public subnet and configure Listener Port to route the traffic to the Target Group.
+
+```
+resource "aws_lb" "app-ALB" {
+  name               = "YOUR LOAD BALANCER NAME"
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets            = [for subnet in aws_subnet.public_subnet : subnet.id]
+  enable_deletion_protection = false
+  internal = "false"
+}
+
+resource "aws_lb_listener" "webserver_listener" {
+  load_balancer_arn = aws_lb.app-ALB.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = aws_lb_target_group.target-group.arn
+    type             = "forward"
+  }
+}
+```
+---
+
+6- Create alias record in Hosted Zone to route the traffic to the Load balancer from public network.
+
+```
+resource "aws_route53_record" "record" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "DeployApache.com"
+  type    = "A"
+  alias {
+    name                   = aws_lb.app-ALB.dns_name
+    zone_id                = aws_lb.app-ALB.zone_id
+    evaluate_target_health = true
+  }
+}
+```
+---
+
+7- Create Cloudwatch Alarms to send notification when ASG state changes.
+
+```
+resource "aws_cloudwatch_metric_alarm" "asg_state_change_alarm" {
+  alarm_name          = "ASGStateChange"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 1
+  metric_name         = "GroupTotalInstances"
+  namespace           = "AWS/AutoScaling"
+  period              = 300  
+  statistic           = "Minimum"
+  threshold           = 1    
+
+  alarm_description = "Alarm triggered when ASG state changes"
+  alarm_actions     = [aws_sns_topic.user_notifications.arn]
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.web-scaling.name
+  }
+}
+```
+---
+
+8- Create Scaling Policies to scale out/Scale In when average CPU utilization is > 80%
+
+```
+resource "aws_autoscaling_policy" "scaling-in" {
+  name                   = "ScaleInPolicy"
+  scaling_adjustment     = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.web-scaling.name
+}
+
+resource "aws_autoscaling_policy" "scaling-out" {
+  name                   = "ScaleOutPolicy"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.web-scaling.name
 }
 ```
 ---
