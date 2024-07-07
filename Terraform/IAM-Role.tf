@@ -63,3 +63,24 @@ resource "aws_iam_role_policy_attachment" "session_manager_policy_attachment" {
   role       = aws_iam_role.Terraform_Role.name
   policy_arn = aws_iam_policy.session_manager_policy.arn
 }
+
+# route53 policy
+resource "aws_iam_policy" "route53_policy" {
+  name        = "route53_policy"
+  description = "Policy for Route 53 access"
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "route53:ListHostedZones",
+          "route53:ListResourceRecordSets",
+          "route53:GetHostedZone",
+          "route53:ChangeResourceRecordSets"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
