@@ -55,7 +55,7 @@ create [VPC](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-us
   ```
   
 - SNS topic for notifications
-- 
+
   ```
   resource "aws_sns_topic" "user_notifications" {
   name = "YOUR SNS NAME"
@@ -81,3 +81,13 @@ resource "aws_iam_role" "Terraform_Role" {
   })
 }
 ```
+4- Golden AMI
+First create EC2 on AWS and get the instance ID.
+
+```
+resource "aws_ami_from_instance" "golden_ami" {
+  name = "YOUR AMI NAME"
+  source_instance_id = "YOUR INSATNCE ID"
+}
+```
+---
