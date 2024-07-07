@@ -12,6 +12,7 @@ This project aims to deploy Apache Webserver in AWS cloud using Terraform as IaC
 1- Create below resources using  Terraform IaC
     
     - Create S3 Bucket to store the terraform statefiles
+    
     ```
     resource "aws_s3_bucket" "bk" {
         bucket = "YOUR BUCKET NAME"
@@ -20,8 +21,9 @@ This project aims to deploy Apache Webserver in AWS cloud using Terraform as IaC
         }
     }
     ```
-
+---
     - Create DynamoDB
+    
     ```
     resource "aws_dynamodb_table" "dynamo_tb" {
         name           = "YOUR TABLE NAME"
