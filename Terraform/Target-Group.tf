@@ -5,7 +5,7 @@ resource "aws_lb_target_group" "target-group" {
   vpc_id   = aws_vpc.web_vpc.id
   health_check {
     path = "/"
-    interval = 30
+    interval = 10
     timeout = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
