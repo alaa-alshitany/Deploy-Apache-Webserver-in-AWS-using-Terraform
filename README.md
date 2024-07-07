@@ -39,3 +39,45 @@ This project aims to deploy Apache Webserver in AWS cloud using Terraform as IaC
 2- Deploy VPC Network using Terrafom IaC and keep the state file in S3 backend.
 
 create [VPC](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/vpc.tf) , [sunets](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/subnets.tf) , [Internet GW](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/IGW.tf) , [NAT GW](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/NGW.tf) , [Route Tables](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/Route-Table.tf)
+
+---
+
+3- Create below resources using Terraform IaC and keep the state file in S3 backend
+- S3 Bucket to store the webserver configuration and PUT  [user-data.sh](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Scripts/user-data.sh)  script file which will configure webserver.
+
+  ```
+   resource "aws_s3_bucket" "bk" {
+        bucket = "YOUR BUCKET NAME"
+        tags = {
+            Name        = "YOUR BUCKET NAME"
+        }
+    }
+  ```
+  
+- SNS topic for notifications
+- 
+  ```
+  resource "aws_sns_topic" "user_notifications" {
+  name = "YOUR SNS NAME"
+}
+  ```
+
+- IAM Role
+
+```
+resource "aws_iam_role" "Terraform_Role" {
+  name = "YOUR ROLE NAME"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+```
