@@ -59,7 +59,7 @@ create [VPC](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-us
   ```
   resource "aws_sns_topic" "user_notifications" {
   name = "YOUR SNS NAME"
-}
+  }
   ```
 
 - IAM Role
