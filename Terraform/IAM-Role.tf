@@ -1,4 +1,4 @@
-resource "aws_iam_role" "s3_and_session_manager_role" {
+resource "aws_iam_role" "Terraform_Role" {
   name = "s3_and_session_manager_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -35,7 +35,7 @@ resource "aws_iam_policy" "s3_policy" {
 
 # attach S3 policy to IAM role
 resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
-  role       = aws_iam_role.s3_and_session_manager_role.name
+  role       = aws_iam_role.Terraform_Role.name
   policy_arn = aws_iam_policy.s3_policy.arn
 }
 
@@ -60,6 +60,6 @@ resource "aws_iam_policy" "session_manager_policy" {
 
 # attach session manager policy to IAM role
 resource "aws_iam_role_policy_attachment" "session_manager_policy_attachment" {
-  role       = aws_iam_role.s3_and_session_manager_role.name
+  role       = aws_iam_role.Terraform_Role.name
   policy_arn = aws_iam_policy.session_manager_policy.arn
 }
