@@ -84,3 +84,9 @@ resource "aws_iam_policy" "route53_policy" {
     ]
   })
 }
+
+# attach route53 policy to iam user 
+resource "aws_iam_user_policy_attachment" "route53_policy_attachment" {
+  user = "REPLACE_WITH_YOUR_IAM_USER_NAME"
+  policy_arn = aws_iam_policy.route53_policy.arn
+}
