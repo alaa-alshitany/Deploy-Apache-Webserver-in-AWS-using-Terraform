@@ -34,3 +34,6 @@ This project aims to deploy Apache Webserver in AWS cloud using Terraform as IaC
   }
 }
     ```
+
+2- Deploy VPC Network using Terrafom IaC and keep the state file in S3 backend.
+create [VPC](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/vpc.tf)
