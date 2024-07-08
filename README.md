@@ -38,7 +38,7 @@ This project aims to deploy Apache Webserver in AWS cloud using Terraform as IaC
 
 2- Deploy VPC Network using Terrafom IaC and keep the state file in S3 backend.
 
-create [VPC](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/vpc.tf) , [sunets](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/subnets.tf) , [Internet GW](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/IGW.tf) , [NAT GW](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/NGW.tf) , [Route Tables](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/blob/main/Terraform/Route-Table.tf)
+create [Network Module](https://github.com/alaa-alshitany/Deploy-Apache-Webserver-in-AWS-using-Terraform/tree/main/Terraform/Network)
 
 ---
 
