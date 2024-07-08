@@ -2,7 +2,7 @@ resource "aws_lb" "app-ALB" {
   name               = "App-ALB"
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [for subnet in aws_subnet.public_subnet : subnet.id]
+  subnets            =  module.network_module.public_subnet
   enable_deletion_protection = false
   internal = "false"
 }

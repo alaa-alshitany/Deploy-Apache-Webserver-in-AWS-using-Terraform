@@ -1,6 +1,6 @@
 resource "aws_security_group" "alb_sg" {
   name = "alb_sg"
-  vpc_id = aws_vpc.web_vpc.id
+  vpc_id = module.network_module.vpc_id
 
   ingress {
     from_port   = 80
@@ -27,7 +27,7 @@ resource "aws_security_group" "alb_sg" {
 resource "aws_security_group" "instance_sg" {
   name        = "instance_sg"
   description = "Allow inbound traffic for instances"
-  vpc_id      = aws_vpc.web_vpc.id
+  vpc_id      = module.network_module.vpc_id
 
   ingress {
     from_port        = 80
